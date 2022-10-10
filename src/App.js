@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 
 function App() {
   const data = jsonData;
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState();
   const [search, setSearch] = useState("");
   const [section, setSection] = useState("posts");
   let timerOnSearch;
@@ -16,17 +16,24 @@ function App() {
     const timer = setTimeout(() => {
       setPosts(data);
     }, 3000);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimer();
+      clearTimeout(timer);
+    };
   }, []);
 
   function OnSectionChange(value) {
     setSection(value);
   }
 
-  function handleChange(e) {
+  function clearTimer() {
     if (timerOnSearch != null) {
       clearTimeout(timerOnSearch);
     }
+  }
+
+  function handleChange(e) {
+    clearTimer();
     timerOnSearch = setTimeout(() => filterPosts(e.target.value), 300);
   }
 

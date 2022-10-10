@@ -6,6 +6,8 @@ import { useState } from "react";
 export default function Post({ createdAt, autor, text, comments, image }) {
   const [like, setLike] = useState(0);
 
+  const minutes = new Date().getMinutes() - createdAt.getMinutes();
+
   function setLikes() {
     setLike(like + 1);
   }
@@ -19,7 +21,7 @@ export default function Post({ createdAt, autor, text, comments, image }) {
             justifyContent: "space-between",
           }}
         >
-          <div className="text-muted">{createdAt} min ago</div>
+          <div className="text-muted">{minutes} min ago</div>
           <div>
             <button type="button" className="btn btn-danger" onClick={setLikes}>
               <small>
