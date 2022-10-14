@@ -6,18 +6,14 @@ export default function NavBar({ onLogoClick, onProfileClick }) {
   return (
     <header className="App-header">
       <nav className="navbar navbar-light bg-light px-3 py-1">
-        <span
-          role="button"
-          className="ml-1 navbar-brand"
-          onClick={() => onProfileClick("posts")}
-        >
+        <span role="button" className="ml-1 navbar-brand" onClick={onLogoClick}>
           <Icon name={ElectricBoltIcon} />
           three pics
         </span>
         <form
           role="button"
           className="form-inline nav-form pr-1"
-          onClick={() => onProfileClick("profile")}
+          onClick={onProfileClick}
         >
           <Icon name={AccountCircleIcon} />
         </form>

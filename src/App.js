@@ -5,26 +5,33 @@ import PostList from "./utils/postlist";
 import Profile from "./utils/profile";
 import jsonData from "./data/data";
 import { useState, useEffect } from "react";
+import Login from "./account/login";
+import configureInterceptor from "./utils/httpinterceptors";
 
 function App() {
   const data = jsonData;
   const [posts, setPosts] = useState();
   const [search, setSearch] = useState("");
   const [section, setSection] = useState("posts");
+  const [loginOk, setLoginOk] = useState(false);
+
   let timerOnSearch;
+  configureInterceptor();
+
   useEffect(() => {
+    if (localStorage.getItem("token") === null) {
+      return;
+    }
+    setLoginOk(true);
     const timer = setTimeout(() => {
       setPosts(data);
     }, 3000);
+
     return () => {
       clearTimer();
       clearTimeout(timer);
     };
-  }, []);
-
-  function OnSectionChange(value) {
-    setSection(value);
-  }
+  }, [loginOk]);
 
   function clearTimer() {
     if (timerOnSearch != null) {
@@ -49,25 +56,34 @@ function App() {
 
   return (
     <div className="App">
-      <NavBar onLogoClick={OnSectionChange} onProfileClick={OnSectionChange} />
       <main>
-        <div className="container">
-          {section == "posts" ? (
-            <>
-              <SearchBar value={search} onSearch={handleChange} />
-              <PostList posts={posts} />
-            </>
-          ) : (
-            <Profile
-              avatar={require("./images/diego.jpeg")}
-              username={"@diego"}
-              bio={`Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+        {loginOk ? (
+          <>
+            <NavBar
+              onLogoClick={() => setSection("posts")}
+              onProfileClick={() => setSection("profile")}
+            />
+            <div className="container">
+              {section == "posts" ? (
+                <>
+                  <SearchBar value={search} onSearch={handleChange} />
+                  <PostList posts={posts} />
+                </>
+              ) : (
+                <Profile
+                  avatar={require("./images/diego.jpeg")}
+                  username={"@diego"}
+                  bio={`Sed ut perspiciatis unde omnis iste natus error sit voluptatem
         accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab
         illo inventore veritatis et quasi architecto beatae vitae dicta sunt
         explicabo.`}
-            />
-          )}
-        </div>
+                />
+              )}
+            </div>
+          </>
+        ) : (
+          <Login onLoginComplete={() => setLoginOk(true)} />
+        )}
       </main>
     </div>
   );
