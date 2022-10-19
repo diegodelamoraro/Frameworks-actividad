@@ -3,13 +3,12 @@ import NavBar from "./utils/navbar";
 import SearchBar from "./utils/searchbar";
 import PostList from "./utils/postlist";
 import Profile from "./utils/profile";
-import jsonData from "./data/data";
 import { useState, useEffect } from "react";
 import Login from "./account/login";
 import configureInterceptor from "./utils/httpinterceptors";
+import { getPosts } from "./service/data-service";
 
 function App() {
-  const data = jsonData;
   const [posts, setPosts] = useState();
   const [search, setSearch] = useState("");
   const [section, setSection] = useState("posts");
@@ -23,15 +22,28 @@ function App() {
       return;
     }
     setLoginOk(true);
-    const timer = setTimeout(() => {
-      setPosts(data);
-    }, 3000);
-
+    searchPosts();
     return () => {
       clearTimer();
-      clearTimeout(timer);
     };
   }, [loginOk]);
+
+  function searchPosts(value) {
+    setPosts();
+    getPosts().then((response) => {
+      if (typeof value === "undefined" || value == null) setPosts(response);
+      else {
+        value = value.toLowerCase();
+        var items = response.filter(
+          (item) =>
+            item.author?.username.toLowerCase().includes(value) ||
+            item.text.toLowerCase().includes(value)
+        );
+        setPosts(items);
+        setSearch(value);
+      }
+    });
+  }
 
   function clearTimer() {
     if (timerOnSearch != null) {
@@ -41,17 +53,7 @@ function App() {
 
   function handleChange(e) {
     clearTimer();
-    timerOnSearch = setTimeout(() => filterPosts(e.target.value), 300);
-  }
-
-  function filterPosts(value) {
-    value = value.toLowerCase();
-    var items = data.filter(
-      (item) =>
-        item.autor?.toLowerCase().includes(value) ||
-        item.text.toLowerCase().includes(value)
-    );
-    setPosts(items);
+    timerOnSearch = setTimeout(() => searchPosts(e.target.value), 500);
   }
 
   return (

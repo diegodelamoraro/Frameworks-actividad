@@ -1,9 +1,9 @@
-import axios from "axios";
-import { Form, Formik, FormikHelpers } from "formik";
+import { Form, Formik } from "formik";
 import TextboxFor from "../utils/textboxfor";
 import Button from "../utils/button";
 import { useState } from "react";
 import Loading from "../utils/loading";
+import { login } from "../service/data-service";
 
 export default function Login({ onLoginComplete }) {
   const [error, setError] = useState();
@@ -11,24 +11,14 @@ export default function Login({ onLoginComplete }) {
   async function handleSubmit(values) {
     //john P4ssW0rd!#
     setError();
-
-    var config = {
-      method: "post",
-      url: "https://three-points.herokuapp.com/api/login",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: JSON.stringify(values),
-    };
-    setLoading(true);
-    axios(config)
-      .then(function (response) {
-        // console.log(JSON.stringify(response.data));
+    login(values.username, values.password)
+      .then((data) => {
         setLoading(false);
         onLoginComplete();
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", data.token);
       })
       .catch(function (error) {
+        console.log(error);
         setError(error);
         setLoading(false);
       });
