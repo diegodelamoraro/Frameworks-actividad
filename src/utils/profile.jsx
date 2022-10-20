@@ -1,4 +1,8 @@
-export default function Profile({ avatar, username, bio }) {
+import { useContext } from "react";
+import authContext from "../authContext";
+
+export default function ProfileComponent({ avatar, username, bio }) {
+  const { logOut } = useContext(authContext);
   return (
     <div className="section-profile text-center my-4">
       <img
@@ -8,6 +12,15 @@ export default function Profile({ avatar, username, bio }) {
       />
       <h6 className="card-title my-3">{username}</h6>
       <p className="card-text px-4">{bio}</p>
+      <a
+        href="#"
+        className="btn btn-primary btn-lg active"
+        role="button"
+        aria-pressed="true"
+        onClick={logOut}
+      >
+        Log Out
+      </a>
     </div>
   );
 }

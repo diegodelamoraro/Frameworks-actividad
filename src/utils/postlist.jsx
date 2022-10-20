@@ -1,6 +1,6 @@
 import Post from "./post";
 import Loading from "./loading";
-export default function PostList({ posts }) {
+export default function PostListComponent({ posts }) {
   console.log("posts", posts);
 
   let condition = null;

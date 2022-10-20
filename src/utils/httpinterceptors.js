@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default function configureInterceptor() {
+export default function configureInterceptor(logOut) {
   axios.interceptors.request.use(
     function (config) {
       const token = localStorage.getItem("token");
@@ -19,10 +19,8 @@ export default function configureInterceptor() {
       return response;
     },
     function (error) {
-      debugger;
       if (401 === error.response.status) {
-        localStorage.clear();
-        window.location.reload(false);
+        logOut();
       } else {
         return Promise.reject(error);
       }

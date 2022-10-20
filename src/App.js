@@ -1,93 +1,75 @@
 import "./App.css";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import NavBar from "./utils/navbar";
-import SearchBar from "./utils/searchbar";
-import PostList from "./utils/postlist";
-import Profile from "./utils/profile";
-import { useState, useEffect } from "react";
-import Login from "./account/login";
+import authContext from "./authContext";
+import { useEffect, useState } from "react";
+import Login from "./screens/Login";
 import configureInterceptor from "./utils/httpinterceptors";
-import { getPosts } from "./service/data-service";
+import routes from "./route-config";
 
 function App() {
-  const [posts, setPosts] = useState();
-  const [search, setSearch] = useState("");
-  const [section, setSection] = useState("posts");
-  const [loginOk, setLoginOk] = useState(false);
-
-  let timerOnSearch;
-  configureInterceptor();
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-    if (localStorage.getItem("token") === null) {
-      return;
+    if (localStorage.getItem("token") !== null) {
+      setCurrentUser({
+        username: localStorage.getItem("username"),
+        token: localStorage.getItem("token"),
+      });
     }
-    setLoginOk(true);
-    searchPosts();
-    return () => {
-      clearTimer();
-    };
-  }, [loginOk]);
+  }, []);
 
-  function searchPosts(value) {
-    setPosts();
-    getPosts().then((response) => {
-      if (typeof value === "undefined" || value == null) setPosts(response);
-      else {
-        value = value.toLowerCase();
-        var items = response.filter(
-          (item) =>
-            item.author?.username.toLowerCase().includes(value) ||
-            item.text.toLowerCase().includes(value)
-        );
-        setPosts(items);
-        setSearch(value);
-      }
-    });
+  function setUser(user) {
+    setCurrentUser(user);
+    localStorage.setItem("username", user.username);
+    localStorage.setItem("token", user.token);
+    navigate("/");
   }
-
-  function clearTimer() {
-    if (timerOnSearch != null) {
-      clearTimeout(timerOnSearch);
-    }
+  function logOut() {
+    setCurrentUser();
+    localStorage.clear();
+    navigate("/login");
   }
-
-  function handleChange(e) {
-    clearTimer();
-    timerOnSearch = setTimeout(() => searchPosts(e.target.value), 500);
-  }
+  configureInterceptor(logOut);
 
   return (
-    <div className="App">
-      <main>
-        {loginOk ? (
-          <>
-            <NavBar
-              onLogoClick={() => setSection("posts")}
-              onProfileClick={() => setSection("profile")}
+    <authContext.Provider value={{ currentUser, setUser, logOut }}>
+      <div className="App">
+        <NavBar />
+        <main>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                typeof currentUser !== "undefined" || currentUser != null ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Login />
+                )
+              }
             />
-            <div className="container">
-              {section == "posts" ? (
-                <>
-                  <SearchBar value={search} onSearch={handleChange} />
-                  <PostList posts={posts} />
-                </>
-              ) : (
-                <Profile
-                  avatar={require("./images/diego.jpeg")}
-                  username={"@diego"}
-                  bio={`Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-        accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab
-        illo inventore veritatis et quasi architecto beatae vitae dicta sunt
-        explicabo.`}
-                />
-              )}
-            </div>
-          </>
-        ) : (
-          <Login onLoginComplete={() => setLoginOk(true)} />
-        )}
-      </main>
-    </div>
+            {routes.map((route) => (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={
+                  typeof currentUser === "undefined" || currentUser == null ? (
+                    <Navigate to="/login" />
+                  ) : (
+                    <>
+                      <div className="container">
+                        <route.component />
+                      </div>
+                    </>
+                  )
+                }
+              />
+            ))}
+          </Routes>
+        </main>
+      </div>
+    </authContext.Provider>
   );
 }
 
