@@ -1,4 +1,3 @@
-import Login from "./screens/Login";
 import PostList from "./screens/PostList";
 import Profile from "./screens/Profile";
 

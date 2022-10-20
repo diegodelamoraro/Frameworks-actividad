@@ -12,10 +12,11 @@ function App() {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-    if (localStorage.getItem("token") !== null) {
+    const token = localStorage.getItem("token");
+    if (token !== null) {
       setCurrentUser({
         username: localStorage.getItem("username"),
-        token: localStorage.getItem("token"),
+        token: token,
       });
     }
   }, []);
