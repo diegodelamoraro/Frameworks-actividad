@@ -1,13 +1,11 @@
 import { useContext, useState } from "react";
 import { login } from "../service/data-service";
 import Auth from "../utils/auth";
-import { useNavigate } from "react-router-dom";
 import authContext from "../authContext";
 
 export default function Login() {
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const { setUser } = useContext(authContext);
   function handleSubmit(values) {
     //john P4ssW0rd!#

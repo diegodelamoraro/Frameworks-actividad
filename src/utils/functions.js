@@ -44,37 +44,37 @@ export function calcDate(date1, date2) {
 
   //display result with custom text
   const result =
-    (years_passed == 0
+    (years_passed === 0
       ? ""
-      : years_passed == 1
+      : years_passed === 1
       ? years_passed + " " + yrsTxt[0] + " "
       : years_passed > 1
       ? years_passed + " " + yrsTxt[1] + " "
       : "") +
-    (months_passed == 0
+    (months_passed === 0
       ? ""
-      : months_passed == 1
+      : months_passed === 1
       ? months_passed + " " + mnthsTxt[0] + " "
       : months_passed > 1
       ? months_passed + " " + mnthsTxt[1] + " "
       : " ") +
-    (days_passed == 0
+    (days_passed === 0
       ? ""
-      : days_passed == 1
+      : days_passed === 1
       ? days_passed + " " + daysTxt[0] + " "
       : days_passed > 1
       ? days_passed + " " + daysTxt[1] + " "
       : "") +
-    (hours_passed == 0
+    (hours_passed === 0
       ? ""
-      : hours_passed == 1
+      : hours_passed === 1
       ? hours_passed + " " + hoursTxt[0] + " "
       : hours_passed > 1
       ? hours_passed + " " + hoursTxt[1] + " "
       : "") +
-    (minutes_passed == 0
+    (minutes_passed === 0
       ? ""
-      : minutes_passed == 1
+      : minutes_passed === 1
       ? minutes_passed + " " + minsTxt[0]
       : minutes_passed > 1
       ? minutes_passed + " " + minsTxt[1]

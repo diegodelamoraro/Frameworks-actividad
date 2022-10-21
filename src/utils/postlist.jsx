@@ -11,7 +11,7 @@ export default function PostListComponent({ posts }) {
     <>
       {typeof condition === "undefined" || condition == null ? (
         <Loading />
-      ) : condition == 0 ? (
+      ) : condition === 0 ? (
         <>Sorry, we couldn't find any results</>
       ) : (
         <div className="row">
