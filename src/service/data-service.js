@@ -1,5 +1,5 @@
 import axios from "axios";
-import { urlLogin, urlPosts } from "./endpoints";
+import { urlLogin, urlPosts, urlUsers } from "./endpoints";
 
 export function login(username, password) {
   return axios
@@ -21,4 +21,8 @@ export function getPosts() {
 
 export function updateLikes(id) {
   return axios.post(`${urlPosts}/${id}/like`).then((response) => response.data);
+}
+
+export function getUser(id) {
+  return axios.get(`${urlUsers}/${id}`).then((response) => response.data);
 }

@@ -1,8 +1,6 @@
 import Post from "./post";
 import Loading from "./loading";
 export default function PostListComponent({ posts }) {
-  console.log("posts", posts);
-
   let condition = null;
   if (posts != null) {
     condition = posts.length;
@@ -25,15 +23,6 @@ export default function PostListComponent({ posts }) {
               text={item.text}
               comments={item.comments}
               image={item.image}
-
-              /*
-                text,
-  author,
-  image,
-  createdAt,
-  updatedAt,
-  id,
-  comments,*/
             />
           ))}
         </div>

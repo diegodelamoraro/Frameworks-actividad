@@ -6,13 +6,12 @@ export default function PostList() {
   let timerOnSearch;
   const [posts, setPosts] = useState();
   const [search, setSearch] = useState("");
-  const val = 1;
   useEffect(() => {
     searchPosts();
     return () => {
       clearTimer();
     };
-  }, [val]);
+  }, []);
 
   function searchPosts(value) {
     setPosts();

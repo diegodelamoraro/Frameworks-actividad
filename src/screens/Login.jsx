@@ -13,7 +13,10 @@ export default function Login() {
     login(values.username, values.password)
       .then((data) => {
         setLoading(false);
-        setUser({ username: values.username, token: data.token });
+        setUser({
+          username: values.username,
+          token: data.token,
+        });
       })
       .catch(function (error) {
         console.log(error);
